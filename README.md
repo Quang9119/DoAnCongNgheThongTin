@@ -1,2 +1,2 @@
 # DoAnCongNgheThongTin
-lý thuyết đồ thị
+lý thuyết đồ thị(graph)
