@@ -1,0 +1,5 @@
+- 2.	Mỗi đỉnh chứa thông thông tin kiểu T 
+Có phải nghĩa là thông thuờng mỗi đỉnh thay vì chỉ lưu tên A,B,C,D.. thì giờ lưu thêm các kiểu dữ liệu ví dụ như color,address,age,....
+
+
+- Đồ thị của mình sẽ là đồ thị vô hướng hay có hướng và có trọng số hay phải làm tất cả.
