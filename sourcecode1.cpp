@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <fstream>
 using namespace std;
 
@@ -6,6 +7,7 @@ void input(int a[][100],int &n);
 void output(int a[][100],int n);
 void inputFile(int a[][100],int &n);
 void addvertex(int a[][100],int &n);
+void changeVertexInfo(int a[][100], int n);
 int Begin();
 void createGraph();
 
@@ -29,6 +31,9 @@ int main() {
 		case 3 : addvertex(a,n);
 				main();
 				break;
+		case 4 : changeVertexInfo(a, n);
+				main();
+    			break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
 	}
@@ -57,6 +62,7 @@ int Begin() {
 		cout << "1.Tao do thi\n";
 		cout << "2.Xuat ma tran ke\n";
 		cout << "3.Them 1 dinh\n";
+		cout << "4.Thay doi thong tin dinh" << endl;
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
@@ -101,7 +107,41 @@ void inputFile(int a[][100],int &n) {
 		cout << "Loi, khong mo duoc file !!\n";
 	}
 }
+void changeVertexInfo(int a[][100], int n) 
+{
+     char oldVertexName;
+    cout << "Nhap ten dinh can thay doi thong tin: ";
+    cin >> oldVertexName;
 
+    int vertexIndex = -1;
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == oldVertexName) {
+            vertexIndex = i;
+            break;
+        }
+    }
+
+    if (vertexIndex == -1) {
+        cout << "Dinh khong ton tai trong do thi!" << endl;
+        return;
+    }
+
+    char newVertexName;
+    cout << "Nhap ten moi cho dinh " << oldVertexName << ": ";
+    cin >> newVertexName;
+
+    vertex[vertexIndex] = newVertexName; 
+
+    cout << "Nhap thong tin moi cho dinh " << newVertexName << ": ";
+
+    for (int i = 0; i < n; i++) {
+        cin >> a[vertexIndex][i]; 
+        a[i][vertexIndex] = a[vertexIndex][i]; 
+    }
+
+    cout << "Thay doi thong tin va ten cua dinh " << oldVertexName << " thanh cong!" << endl;
+    cout << endl;
+}
 
 void input(int a[][100],int &n) {
 	do {
