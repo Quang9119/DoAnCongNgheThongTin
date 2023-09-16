@@ -8,6 +8,8 @@ void output(int a[][100],int n);
 void inputFile(int a[][100],int &n);
 void addvertex(int a[][100],int &n);
 void changeVertexInfo(int a[][100], int n);
+void addEdge(int a[][100], int n);
+void printVertexEdge(int a[][100], int n);
 int Begin();
 void createGraph();
 
@@ -32,6 +34,12 @@ int main() {
 				main();
 				break;
 		case 4 : changeVertexInfo(a, n);
+				main();
+    			break;
+    	case 5 : addEdge(a, n);
+				main();
+    			break;
+    	case 6 : printVertexEdge(a, n);
 				main();
     			break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
@@ -62,11 +70,59 @@ int Begin() {
 		cout << "1.Tao do thi\n";
 		cout << "2.Xuat ma tran ke\n";
 		cout << "3.Them 1 dinh\n";
-		cout << "4.Thay doi thong tin dinh" << endl;
+		cout << "4.Thay doi thong tin dinh\n" ;
+		cout << "5.Them canh\n";
+		cout << "6.Xuat cac ten dinh, ten canh\n";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
 	return chooseBegin;
+}
+
+void printVertexEdge(int a[][100], int n) {
+	cout << "Cac dinh la: ";
+	for(int i=0;i<n;i++) {
+		cout << vertex[i] << ", ";
+	}
+	cout << endl;
+	cout << "Cac canh la: ";
+	for(int i=0;i<n;i++) {
+		for(int j=0;j<n;j++) {
+			if(a[i][j] == 1) {
+				cout << vertex[i] << vertex[j] << ", ";
+			}
+		}
+	}
+	cout << endl;
+}
+
+void addEdge(int a[][100], int n) {
+    char sourceVertex, destinationVertex;
+    int sourceIndex = -1, destinationIndex = -1;
+
+    cout << "Nhap ten dinh nguon: ";
+    cin >> sourceVertex;
+    cout << "Nhap ten dinh dich: ";
+    cin >> destinationVertex;
+
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == sourceVertex) {
+            sourceIndex = i;
+        }
+        if (vertex[i] == destinationVertex) {
+            destinationIndex = i;
+        }
+    }
+
+    if (sourceIndex == -1 || destinationIndex == -1) {
+        cout << "Mot hoac ca hai dinh khong ton tai trong do thi!" << endl;
+        return;
+    }
+
+    a[sourceIndex][destinationIndex] = 1; 
+    a[destinationIndex][sourceIndex] = 1; 
+
+    cout << "Them canh thanh cong!" << endl;
 }
 
 
