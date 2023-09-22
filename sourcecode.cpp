@@ -10,6 +10,8 @@ void addvertex(int a[][100],int &n);
 void changeVertexInfo(int a[][100], int n);
 void addEdge(int a[][100], int n);
 void printVertexEdge(int a[][100], int n);
+void displayVertexEdgeInfo(int a[][100], int n);
+void changeWeight(int a[][100], int n);
 int Begin();
 void createGraph();
 
@@ -42,6 +44,14 @@ int main() {
     	case 6 : printVertexEdge(a, n);
 				main();
     			break;
+    	case 7:
+            	displayVertexEdgeInfo(a, n);
+            	main();
+            	break;
+        case 8:
+	            changeWeight(a, n);
+	            main();
+	            break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
 	}
@@ -73,6 +83,8 @@ int Begin() {
 		cout << "4.Thay doi thong tin dinh\n" ;
 		cout << "5.Them canh\n";
 		cout << "6.Xuat cac ten dinh, ten canh\n";
+		cout << "7. Xuat thong tin cua dinh va canh\n";
+		cout << "8.Thay doi trong so cua canh";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
@@ -218,6 +230,67 @@ void input(int a[][100],int &n) {
 			cin >> a[i][j];
 		}
 	}
+}
+void displayVertexEdgeInfo(int a[][100], int n) 
+{
+    char vertexName;
+    cout << "Nhap ten dinh can xuat thong tin: ";
+    cin >> vertexName;
+
+    int vertexIndex = -1;
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == vertexName) {
+            vertexIndex = i;
+            break;
+        }
+    }
+
+    if (vertexIndex == -1) {
+        cout << "Dinh khong ton tai trong do thi!" << endl;
+        return;
+    }
+
+    cout << "Thong tin cua dinh " << vertexName << ":" << endl;
+    cout << "Cac dinh ke voi " << vertexName << ": ";
+    for (int i = 0; i < n; i++) {
+        if (a[vertexIndex][i] == 1) {
+            cout << vertex[i] << ", ";
+        }
+    }
+    cout << endl;
+}
+void changeWeight(int a[][100], int n) 
+{
+    char vertexName1, vertexName2;
+    int weight;
+
+    cout << "Nhap ten dinh dau cua canh: ";
+    cin >> vertexName1;
+    cout << "Nhap ten dinh cuoi cua canh: ";
+    cin >> vertexName2;
+    cout << "Nhap gia tri moi cua trong so: ";
+    cin >> weight;
+
+    int vertexIndex1 = -1;
+    int vertexIndex2 = -1;
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == vertexName1) {
+            vertexIndex1 = i;
+        }
+        if (vertex[i] == vertexName2) {
+            vertexIndex2 = i;
+        }
+    }
+
+    if (vertexIndex1 == -1 || vertexIndex2 == -1) {
+        cout << "Mot trong hai dinh khong ton tai trong do thi!" << endl;
+        return;
+    }
+
+    a[vertexIndex1][vertexIndex2] = weight;
+    a[vertexIndex2][vertexIndex1] = weight;
+
+    cout << "Da thay doi trong so cua canh " << vertexName1 << "-" << vertexName2 << " thanh " << weight << endl;
 }
 void output(int a[][100],int n) {
 	for(int i=0;i<n;i++) cout << "----------";
