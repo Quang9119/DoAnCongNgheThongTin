@@ -14,7 +14,10 @@ void displayVertexEdgeInfo(int a[][100], int n);
 void changeWeight(int a[][100], int n);
 int Begin();
 void createGraph();
-
+void dijkstra(int a[][100], int n);
+int minDistance(int dist[], bool sptSet[], int n);
+void printSolution(int dist[], int parent[], int n, char src, char dest);
+void printPath(int parent[], int j);
 
 int a[100][100],n,chooseBegin,chooseGraph;
 char vertex[100];
@@ -52,6 +55,10 @@ int main() {
 	            changeWeight(a, n);
 	            main();
 	            break;
+	    case 9:
+	            dijkstra(a, n);
+	            main();
+	            break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
 	}
@@ -84,7 +91,8 @@ int Begin() {
 		cout << "5.Them canh\n";
 		cout << "6.Xuat cac ten dinh, ten canh\n";
 		cout << "7. Xuat thong tin cua dinh va canh\n";
-		cout << "8.Thay doi trong so cua canh";
+		cout << "8.Thay doi trong so cua canh\n";
+		cout << "9.Duong di ngan nhat tu dinh v den w\n";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
@@ -107,6 +115,84 @@ void printVertexEdge(int a[][100], int n) {
 	}
 	cout << endl;
 }
+void dijkstra(int a[][100], int n) {
+    char src, dest;
+
+    cout << "Nhap dinh nguon: ";
+    cin >> src;
+    cout << "Nhap dinh dich: ";
+    cin >> dest;
+
+    int dist[100];
+    bool sptSet[100];
+    int parent[100];
+
+    for (int i = 0; i < n; i++) {
+        dist[i] = INT_MAX;
+        sptSet[i] = false;
+    }
+
+    int srcIndex = -1, destIndex = -1;
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == src) {
+            srcIndex = i;
+        }
+        if (vertex[i] == dest) {
+            destIndex = i;
+        }
+    }
+
+    if (srcIndex == -1 || destIndex == -1) {
+        cout << "Dinh nguon hoac dinh dich khong ton tai trong do thi!" << endl;
+        return;
+    }
+
+    dist[srcIndex] = 0;
+    parent[srcIndex] = -1;
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = minDistance(dist, sptSet, n);
+
+        sptSet[u] = true;
+
+        for (int v = 0; v < n; v++) {
+            if (!sptSet[v] && a[u][v] && dist[u] != INT_MAX && dist[u] + a[u][v] < dist[v]) {
+                dist[v] = dist[u] + a[u][v];
+                parent[v] = u;
+            }
+        }
+    }
+
+    if (dist[destIndex] != INT_MAX) {
+        cout << "Duong di ngan nhat tu dinh " << src << " den dinh " << dest << " la: " << src;;
+        printPath(parent, destIndex);
+        cout << " voi tong trong so la " << dist[destIndex] << endl;
+    } else {
+        cout << "Khong co duong di tu dinh " << src << " den dinh " << dest << endl;
+    }
+}
+
+void printPath(int parent[], int j) {
+    if (parent[j] == -1)
+        return;
+
+    printPath(parent, parent[j]);
+    cout << " -> " << vertex[j];
+}
+int minDistance(int dist[], bool sptSet[], int n) {
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < n; v++) {
+        if (!sptSet[v] && dist[v] <= min) {
+            min = dist[v];
+            min_index = v;
+        }
+    }
+
+    return min_index;
+}
+
+
 
 void addEdge(int a[][100], int n) {
     char sourceVertex, destinationVertex;
