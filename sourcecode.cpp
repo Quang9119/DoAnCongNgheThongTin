@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <queue>
 using namespace std;
 
 void input(int a[][100],int &n);
@@ -12,6 +13,9 @@ void addEdge(int a[][100], int n);
 void printVertexEdge(int a[][100], int n);
 void displayVertexEdgeInfo(int a[][100], int n);
 void changeWeight(int a[][100], int n);
+void dfsTraversal(int a[][100], int n, int vertex, bool visited[]);
+void dfsTraversalWrapper(int a[][100], int n, int startVertex);
+void bfsTraversal(int a[][100], int n, int startVertex);
 int Begin();
 void createGraph();
 void dijkstra(int a[][100], int n);
@@ -19,6 +23,7 @@ int minDistance(int dist[], bool sptSet[], int n);
 void printSolution(int dist[], int parent[], int n, char src, char dest);
 void printPath(int parent[], int j);
 
+int startVertex;
 int a[100][100],n,chooseBegin,chooseGraph;
 char vertex[100];
 int main() {
@@ -59,6 +64,18 @@ int main() {
 	            dijkstra(a, n);
 	            main();
 	            break;
+	    case 10:
+	            cout << "Enter the starting vertex for BFS traversal: ";
+	            cin >> startVertex;
+	            bfsTraversal(a, n, startVertex);
+	            main();
+	            break;
+        case 11:
+	            cout << "Enter the starting vertex for DFS traversal: ";
+	            cin >> startVertex;
+	            dfsTraversalWrapper(a, n, startVertex);
+	            main();
+	            break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
 	}
@@ -93,6 +110,8 @@ int Begin() {
 		cout << "7. Xuat thong tin cua dinh va canh\n";
 		cout << "8.Thay doi trong so cua canh\n";
 		cout << "9.Duong di ngan nhat tu dinh v den w\n";
+		cout << "10.Duyet do thi theo chieu rong\n";
+		cout << "11.Duyet do thi theo chieu sau\n";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
@@ -378,7 +397,59 @@ void changeWeight(int a[][100], int n)
 
     cout << "Da thay doi trong so cua canh " << vertexName1 << "-" << vertexName2 << " thanh " << weight << endl;
 }
-void output(int a[][100],int n) {
+void dfsTraversal(int a[][100], int n, int vertex, bool visited[])
+{
+    visited[vertex] = true;
+    cout << vertex << " ";
+
+    for (int i = 0; i < n; i++)
+    {
+        if (a[vertex][i] != 0 && !visited[i])
+        {
+            dfsTraversal(a, n, i, visited);
+        }
+    }
+}
+
+void dfsTraversalWrapper(int a[][100], int n, int startVertex)
+{	
+    bool visited[100] = {false};
+    cout << "DFS Traversal: ";
+    dfsTraversal(a, n, startVertex, visited);
+    cout << endl;
+}
+
+void bfsTraversal(int a[][100], int n, int startVertex)
+{
+    bool visited[100] = {false};
+    queue<int> q;
+
+    cout << "BFS Traversal: ";
+
+    visited[startVertex] = true;
+    q.push(startVertex);
+
+    while (!q.empty())
+    {
+        int vertex = q.front();
+        q.pop();
+        cout << vertex << " ";
+
+        for (int i = 0; i < n; i++)
+        {
+            if (a[vertex][i] != 0 && !visited[i])
+            {
+                visited[i] = true;
+                q.push(i);
+            }
+        }
+    }
+
+    cout << endl;
+}
+
+void output(int a[][100],int n) 
+{
 	for(int i=0;i<n;i++) cout << "----------";
 	cout << endl;
 	cout << "|";
