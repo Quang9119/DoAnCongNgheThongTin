@@ -2,6 +2,7 @@
 #include <cstring>
 #include <fstream>
 #include <queue>
+#define MAX 9999
 using namespace std;
 
 void input(int a[][100],int &n);
@@ -22,6 +23,10 @@ void dijkstra(int a[][100], int n);
 int minDistance(int dist[], bool sptSet[], int n);
 void printSolution(int dist[], int parent[], int n, char src, char dest);
 void printPath(int parent[], int j);
+int kteuler(int B[],int n);
+void euler(int a[][100], int n);
+bool isEdgeValid(int a[][100], int n, int v, int w);
+void timChuTrinhEuler(int a[][100],int n);
 
 int startVertex;
 int a[100][100],n,chooseBegin,chooseGraph;
@@ -76,6 +81,10 @@ int main() {
 	            dfsTraversalWrapper(a, n, startVertex);
 	            main();
 	            break;
+	    case 12:
+	            euler(a, n);
+	            main();
+	            break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
 	}
@@ -112,10 +121,77 @@ int Begin() {
 		cout << "9.Duong di ngan nhat tu dinh v den w\n";
 		cout << "10.Duyet do thi theo chieu rong\n";
 		cout << "11.Duyet do thi theo chieu sau\n";
+		cout << "12.Kiem tra chu trinh Euler\n";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
 	return chooseBegin;
+}
+
+void euler(int a[][100], int n) {
+	int B[n];
+	
+	for(int i=0;i<n;i++) {
+		B[i]=0;
+		for(int j=0;j<n;j++) {
+			B[i] +=a[i][j];
+		}
+	}
+	int kq = kteuler(B,n);
+	if(kq) {
+		cout << "Do thi co chu trinh euler\n";
+		timChuTrinhEuler(a,n);
+	}
+	else cout << "Do thi khong co chu trinh euler\n";
+}
+
+void timChuTrinhEuler(int a[][100], int n) {
+    int aCopy[100][100];
+    memcpy(aCopy, a, sizeof(aCopy));
+    char CE[MAX];
+    char stack[MAX];
+    int top = 1;
+    stack[top] = vertex[0]; // Initialize the stack with the starting vertex
+    int dCE = 0;
+    do {
+        char v = stack[top];
+        int x = 0;
+        for (int i = 0; i < n; i++) {
+            if (vertex[i] == v) {
+                x = i;
+                break;
+            }
+        }
+        int hasNextEdge = 0;
+        for (int w = 0; w < n; w++) {
+            if (aCopy[x][w] == 1) {
+                top++;
+                stack[top] = vertex[w];
+                aCopy[x][w] = 0;
+                aCopy[w][x] = 0;
+                hasNextEdge = 1;
+                break;
+            }
+        }
+        if (!hasNextEdge) {
+            dCE++;
+            CE[dCE] = v;
+            top--;
+        }
+    } while (top != 0);
+    cout << "Chu trinh euler la:\n";
+    for (int x = dCE; x > 1; x--) {
+        cout << CE[x] << " --> ";
+    }
+    cout << CE[1] << endl;
+}
+
+
+int kteuler(int B[],int n) {
+	for(int i=0;i<n;i++) {
+		if(B[i]%2==1) return false;
+	}
+	return true;
 }
 
 void printVertexEdge(int a[][100], int n) {
