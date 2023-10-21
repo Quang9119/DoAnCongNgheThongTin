@@ -27,6 +27,9 @@ int kteuler(int B[],int n);
 void euler(int a[][100], int n);
 bool isEdgeValid(int a[][100], int n, int v, int w);
 void timChuTrinhEuler(int a[][100],int n);
+void primMST(int a[][100], int n);
+int minKey(int key[], bool mstSet[], int n);
+void printMST(int a[][100], int parent[], int n);
 
 int startVertex;
 int a[100][100],n,chooseBegin,chooseGraph;
@@ -85,6 +88,10 @@ int main() {
 	            euler(a, n);
 	            main();
 	            break;
+	    case 13:
+	            primMST(a, n);
+	            main();
+	            break;
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
 	}
@@ -122,11 +129,62 @@ int Begin() {
 		cout << "10.Duyet do thi theo chieu rong\n";
 		cout << "11.Duyet do thi theo chieu sau\n";
 		cout << "12.Kiem tra chu trinh Euler\n";
+		cout << "13. Cay khung be nhat\n";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
 	return chooseBegin;
 }
+void primMST(int a[][100], int n) {
+    int parent[100];   
+    int key[100];      
+    bool mstSet[100];  
+
+    for (int i = 0; i < n; i++) {
+        key[i] = MAX;    
+        mstSet[i] = false;
+    }
+
+    key[0] = 0;
+    parent[0] = -1; 
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = minKey(key, mstSet, n);
+
+        mstSet[u] = true;
+
+        for (int v = 0; v < n; v++) {
+            if (a[u][v] && !mstSet[v] && a[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = a[u][v];
+            }
+        }
+    }
+
+    printMST(a, parent, n);
+}
+
+int minKey(int key[], bool mstSet[], int n) {
+    int min = MAX, minIndex;
+
+    for (int v = 0; v < n; v++) {
+        if (!mstSet[v] && key[v] < min) {
+            min = key[v];
+            minIndex = v;
+        }
+    }
+
+    return minIndex;
+}
+
+void printMST(int a[][100], int parent[], int n) {
+    cout << "Cay khung be nhat:\n";
+    for (int i = 1; i < n; i++) {
+        cout << "Canh: " << vertex[parent[i]] << " - " << vertex[i] << " co trong so: " << a[i][parent[i]] << endl;
+    }
+}
+
+
 
 void euler(int a[][100], int n) {
 	int B[n];
