@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <climits>
 #include <queue>
 #define MAX 9999
 using namespace std;
@@ -18,6 +19,7 @@ void dfsTraversal(int a[][100], int n, int vertex, bool visited[]);
 void dfsTraversalWrapper(int a[][100], int n, int startVertex);
 void bfsTraversal(int a[][100], int n, int startVertex);
 int Begin();
+char parent[100];
 void createGraph();
 void dijkstra(int a[][100], int n);
 int minDistance(int dist[], bool sptSet[], int n);
@@ -30,9 +32,14 @@ void timChuTrinhEuler(int a[][100],int n);
 void primMST(int a[][100], int n);
 int minKey(int key[], bool mstSet[], int n);
 void printMST(int a[][100], int parent[], int n);
+int fordFulkerson(int a[][100], int s, int t);
+bool bfs(int rGraph[][100], int n, int s, int t, int parent[]);
+
 
 int startVertex;
+int maxFlow;
 int a[100][100],n,chooseBegin,chooseGraph;
+char source, sink;
 char vertex[100];
 int main() {
 	chooseBegin = Begin();
@@ -92,8 +99,44 @@ int main() {
 	            primMST(a, n);
 	            main();
 	            break;
+	    case 14:
+		{
+		    cout << "Nhap dinh nguon cho thuat toan Ford-Fulkerson: ";
+		    cin >> source;
+		    cout << "Nhap dinh dich cho thuat toan Ford-Fulkerson: ";
+		    cin >> sink;
+		
+		    int srcIndex = -1;
+		    int destIndex = -1;
+		    for (int i = 0; i < n; i++)
+		    {
+		        if (vertex[i] == source)
+		        {
+		            srcIndex = i;
+		        }
+		        if (vertex[i] == sink)
+		        {
+		            destIndex = i;
+		        }
+		    }
+		
+		    if (srcIndex == -1 || destIndex == -1)
+		    {
+		        cout << "Mot hoac ca hai dinh khong ton tai trong do thi!" << endl;
+		        main();
+		        break;
+		    }
+		
+		    cout << "Dong chay lon nhat la: " << fordFulkerson(a, srcIndex, destIndex) << endl;
+		
+		    // Go back to main menu
+		    main();
+		    break;
+		}
+
 		default : cout << "Vui long chon so hop le !!!\n"; 
 				main();
+		
 	}
 	return 0;
 }
@@ -130,11 +173,66 @@ int Begin() {
 		cout << "11.Duyet do thi theo chieu sau\n";
 		cout << "12.Kiem tra chu trinh Euler\n";
 		cout << "13. Cay khung be nhat\n";
+		cout << "14. Dong chay lon nhat \n";
 		cout << "------------------------------------------------------------------------------------------------------------------------\n";
 		cout << "LUA CHON CUA BAN LA : ";
 		cin >> chooseBegin;
 	return chooseBegin;
 }
+
+bool bfs(int rGraph[][100], int n, int s, int t, int parent[]) {
+    bool visited[n];
+    memset(visited, 0, sizeof(visited));
+    queue<int> q;
+    q.push(s);
+    visited[s] = true;
+    parent[s] = -1;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (int v = 0; v < n; v++) {
+            if (visited[v] == false && rGraph[u][v] > 0) {
+                q.push(v);
+                parent[v] = u;
+                visited[v] = true;
+            }
+        }
+    }
+    return (visited[t] == true);
+}
+
+int fordFulkerson(int a[][100], int s, int t) {
+    int u, v;
+    int rGraph[n][100];
+    for (u = 0; u < n; u++)
+        for (v = 0; v < 100; v++)
+            rGraph[u][v] = a[u][v];
+
+    int parent[n];
+    int max_flow = 0;
+
+    // Updating the residual values of edges
+    while (bfs(rGraph, n, s, t, parent)) {
+        int path_flow = INT_MAX;
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            path_flow = min(path_flow, rGraph[u][v]);
+        }
+
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            rGraph[u][v] -= path_flow;
+            rGraph[v][u] += path_flow;
+        }
+        // Adding the path flows
+        max_flow += path_flow;
+    }
+
+    return max_flow;
+}
+
 void primMST(int a[][100], int n) {
     int parent[100];   
     int key[100];      
@@ -209,7 +307,7 @@ void timChuTrinhEuler(int a[][100], int n) {
     char CE[MAX];
     char stack[MAX];
     int top = 1;
-    stack[top] = vertex[0]; // Initialize the stack with the starting vertex
+    stack[top] = vertex[0]; 
     int dCE = 0;
     do {
         char v = stack[top];
