@@ -34,9 +34,10 @@ int minKey(int key[], bool mstSet[], int n);
 void printMST(int a[][100], int parent[], int n);
 int fordFulkerson(int a[][100], int s, int t);
 bool bfs(int rGraph[][100], int n, int s, int t, int parent[]);
+void bfsTraversal(int a[][100], int n, char startVertex);
+void dfsTraversalWrapper(int a[][100], int n, char startVertex);
 
-
-int startVertex;
+char startVertex;
 int maxFlow;
 int a[100][100],n,chooseBegin,chooseGraph;
 char source, sink;
@@ -629,47 +630,61 @@ void changeWeight(int a[][100], int n)
 
     cout << "Da thay doi trong so cua canh " << vertexName1 << "-" << vertexName2 << " thanh " << weight << endl;
 }
-void dfsTraversal(int a[][100], int n, int vertex, bool visited[])
+void dfsTraversal(int a[][100], int n, int v, bool visited[])
 {
-    visited[vertex] = true;
-    cout << vertex << " ";
+    visited[v] = true;
+    cout << vertex[v] << " ->";
 
     for (int i = 0; i < n; i++)
     {
-        if (a[vertex][i] != 0 && !visited[i])
+        if (a[v][i] != 0 && !visited[i])
         {
             dfsTraversal(a, n, i, visited);
         }
     }
 }
 
-void dfsTraversalWrapper(int a[][100], int n, int startVertex)
+void dfsTraversalWrapper(int a[][100], int n, char startVertex)
 {	
+	int vertexIndex = -1;
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == startVertex) {
+            vertexIndex = i;
+            break;
+        }
+    }
     bool visited[100] = {false};
     cout << "DFS Traversal: ";
-    dfsTraversal(a, n, startVertex, visited);
+    dfsTraversal(a, n, vertexIndex, visited);
     cout << endl;
 }
 
-void bfsTraversal(int a[][100], int n, int startVertex)
+void bfsTraversal(int a[][100], int n, char startVertex)
 {
+	int vertexIndex = -1;
+    for (int i = 0; i < n; i++) {
+        if (vertex[i] == startVertex) {
+            vertexIndex = i;
+            break;
+        }
+    }
     bool visited[100] = {false};
     queue<int> q;
 
     cout << "BFS Traversal: ";
 
-    visited[startVertex] = true;
-    q.push(startVertex);
+    visited[vertexIndex] = true;
+    q.push(vertexIndex);
 
     while (!q.empty())
     {
-        int vertex = q.front();
+        int v = q.front();
         q.pop();
-        cout << vertex << " ";
+        cout << vertex[v] << " ->";
 
         for (int i = 0; i < n; i++)
         {
-            if (a[vertex][i] != 0 && !visited[i])
+            if (a[v][i] != 0 && !visited[i])
             {
                 visited[i] = true;
                 q.push(i);
